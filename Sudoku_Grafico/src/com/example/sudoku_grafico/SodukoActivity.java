@@ -7,6 +7,7 @@ import com.example.sudoku_grafico.util.Util;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +17,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SodukoActivity extends Activity{
 
@@ -35,7 +38,7 @@ public class SodukoActivity extends Activity{
 	private String sudoku;
 	private Button solucionar;
 	private Button verificar;
-	private TextView text1_1, text1_2, text1_3, text1_4, text1_5, text1_6, text1_7, text1_8, text1_9,
+	private EditText text1_1, text1_2, text1_3, text1_4, text1_5, text1_6, text1_7, text1_8, text1_9,
 					text2_1, text2_2, text2_3, text2_4, text2_5, text2_6, text2_7, text2_8, text2_9,
 					text3_1, text3_2, text3_3, text3_4, text3_5, text3_6, text3_7, text3_8, text3_9,
 					text4_1, text4_2, text4_3, text4_4, text4_5, text4_6, text4_7, text4_8, text4_9,
@@ -55,6 +58,8 @@ public class SodukoActivity extends Activity{
 		timeString = (TextView) findViewById(R.id.time);
 
 		sudoku = Util.matrizToString(tablero);
+		
+		incializarBotones();
 		
 		TimerTask tarea = new TimerTask(){
 			@Override
@@ -106,6 +111,15 @@ public class SodukoActivity extends Activity{
 					}
 				}
 			);
+		
+		//Eventos de los botones
+		text1_1.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -131,13 +145,10 @@ public class SodukoActivity extends Activity{
 	@Override
 	protected void onStop() {
 		super.onStop();
-
 		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();
 		editor.putString("key_sudoku",sudoku);
 		editor.commit();
-
-		
 	}
 	@Override
 	protected void onDestroy() {
@@ -149,45 +160,507 @@ public class SodukoActivity extends Activity{
 		timeString.setText(time);
 	}
 	
+	public void llenarTableroGrafico(){
+		int indice = 1;
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero.length; j++) {
+				
+			}
+		}
+	}
+	
+	public void MessageBox(String message){
+	    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+	    //Muestra un mensaje
+	}
+	
 	public void incializarBotones(){
-		text1_1 = (TextView) findViewById(R.id.editText1);
-		text1_2 = (TextView) findViewById(R.id.editText2);
-		text1_3 = (TextView) findViewById(R.id.editText3);
-		text1_4 = (TextView) findViewById(R.id.editText4);
-		text1_5 = (TextView) findViewById(R.id.editText5);
-		text1_6 = (TextView) findViewById(R.id.editText6);
-		text1_7 = (TextView) findViewById(R.id.editText7);
-		text1_8 = (TextView) findViewById(R.id.editText8);
-		text1_9 = (TextView) findViewById(R.id.editText9);
-		text2_1 = (TextView) findViewById(R.id.editText10);
-		text2_2 = (TextView) findViewById(R.id.editText11);
-		text2_3 = (TextView) findViewById(R.id.editText12);
-		text2_4 = (TextView) findViewById(R.id.editText13);
-		text2_5 = (TextView) findViewById(R.id.editText14);
-		text2_6 = (TextView) findViewById(R.id.editText15);
-		text2_7 = (TextView) findViewById(R.id.editText16);
-		text2_8 = (TextView) findViewById(R.id.editText17);
-		text2_9 = (TextView) findViewById(R.id.editText18);
-		text3_1 = (TextView) findViewById(R.id.editText19);
-		text3_2 = (TextView) findViewById(R.id.editText20);
-		text3_3 = (TextView) findViewById(R.id.editText21);
-		text3_4 = (TextView) findViewById(R.id.editText22);
-		text3_5 = (TextView) findViewById(R.id.editText23);
-		text3_6 = (TextView) findViewById(R.id.editText24);
-		text3_7 = (TextView) findViewById(R.id.editText25);
-		text3_8 = (TextView) findViewById(R.id.editText26);
-		text3_9 = (TextView) findViewById(R.id.editText27);
-		text4_1 = (TextView) findViewById(R.id.editText28);
-		text4_2 = (TextView) findViewById(R.id.editText29);
-		text4_3 = (TextView) findViewById(R.id.editText30);
-		text4_4 = (TextView) findViewById(R.id.editText31);
-		text4_5 = (TextView) findViewById(R.id.editText32);
-		text4_6 = (TextView) findViewById(R.id.editText33);
-		text4_7 = (TextView) findViewById(R.id.editText34);
-		text4_8 = (TextView) findViewById(R.id.editText35);
-		text4_9 = (TextView) findViewById(R.id.editText36);
-		text5_1 = (TextView) findViewById(R.id.editText37);
-		text5_2 = (TextView) findViewById(R.id.editText38);
-//		text1_1.setOnKeyListener();
+		//Se inicializan los botones y se asigna el valor que le corresponde a cada uno
+		
+		text1_1 = (EditText) findViewById(R.id.editText1);
+		if(tablero[0][0]!=0){
+			text1_1.setText(""+tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+
+		text1_2 = (EditText) findViewById(R.id.editText2);
+		if(tablero[0][1]!=0){
+			text1_2.setText(""+tablero[0][1]);
+			text1_2.setEnabled(false);
+		}
+		
+		text1_3 = (EditText) findViewById(R.id.editText3);
+		if(tablero[0][2]!=0){
+			text1_3.setText(""+tablero[0][2]);
+			text1_3.setEnabled(false);
+		}
+		
+		text1_4 = (EditText) findViewById(R.id.editText4);
+		if(tablero[0][3]!=0){
+			text1_4.setText(""+tablero[0][3]);
+			text1_4.setEnabled(false);
+		}
+		
+		text1_5 = (EditText) findViewById(R.id.editText5);
+		if(tablero[0][4]!=0){
+			text1_5.setText(""+tablero[0][4]);
+			text1_5.setEnabled(false);
+		}
+		
+		text1_6 = (EditText) findViewById(R.id.editText6);
+		if(tablero[0][5]!=0){
+			text1_6.setText(""+tablero[0][5]);
+			text1_6.setEnabled(false);
+		}
+		
+		text1_7 = (EditText) findViewById(R.id.editText7);
+		if(tablero[0][6]!=0){
+			text1_7.setText(""+tablero[0][6]);
+			text1_7.setEnabled(false);
+		}
+		
+		text1_8 = (EditText) findViewById(R.id.editText8);
+		if(tablero[0][7]!=0){
+			text1_8.setText(""+tablero[0][7]);
+			text1_8.setEnabled(false);
+		}
+		
+		text1_9 = (EditText) findViewById(R.id.editText9);
+		if(tablero[0][8]!=0){
+			text1_9.setText(""+tablero[0][8]);
+			text1_9.setEnabled(false);
+		}
+		
+		text2_1 = (EditText) findViewById(R.id.editText10);
+		if(tablero[1][0]!=0){
+			text2_1.setText(""+tablero[1][0]);
+			text2_1.setEnabled(false);
+		}
+		
+		text2_2 = (EditText) findViewById(R.id.editText11);
+		if(tablero[1][1]!=0){
+			text2_2.setText(""+tablero[1][1]);
+			text2_2.setEnabled(false);
+		}
+		
+		text2_3 = (EditText) findViewById(R.id.editText12);
+		if(tablero[1][2]!=0){
+			text2_3.setText(""+tablero[1][2]);
+			text2_3.setEnabled(false);
+		}
+		
+		text2_4 = (EditText) findViewById(R.id.editText13);
+		if(tablero[1][3]!=0){
+			text2_4.setText(""+tablero[1][3]);
+			text2_4.setEnabled(false);
+		}
+		
+		text2_5 = (EditText) findViewById(R.id.editText14);
+		if(tablero[1][4]!=0){
+			text2_5.setText(""+tablero[1][4]);
+			text2_5.setEnabled(false);
+		}
+		
+		text2_6 = (EditText) findViewById(R.id.editText15);
+		if(tablero[1][5]!=0){
+			text2_6.setText(""+tablero[1][5]);
+			text2_6.setEnabled(false);
+		}
+		
+//		text2_7 = (TextView) findViewById(R.id.editText16);
+//		if(tablero[1][6]!=0){
+//			text2_7.setText(tablero[1][6]);
+//			text2_7.setEnabled(false);
+//		}
+//		
+//		text2_8 = (TextView) findViewById(R.id.editText17);
+//		if(tablero[1][7]!=0){
+//			text2_8.setText(tablero[1][7]);
+//			text2_8.setEnabled(false);
+//		}
+//		
+//		text2_9 = (TextView) findViewById(R.id.editText18);
+//		if(tablero[1][8]!=0){
+//			text2_9.setText(tablero[1][8]);
+//			text2_9.setEnabled(false);
+//		}
+//		
+//		text3_1 = (TextView) findViewById(R.id.editText19);
+//		if(tablero[2][0]!=0){
+//			text3_1.setText(tablero[2][0]);
+//			text3_1.setEnabled(false);
+//		}
+//		
+//		text3_2 = (TextView) findViewById(R.id.editText20);
+//		if(tablero[2][1]!=0){
+//			text3_2.setText(tablero[2][1]);
+//			text3_2.setEnabled(false);
+//		}
+//		
+//		text3_3 = (TextView) findViewById(R.id.editText21);
+//		if(tablero[2][2]!=0){
+//			text3_3.setText(tablero[2][2]);
+//			text3_3.setEnabled(false);
+//		}
+//		
+//		text3_4 = (TextView) findViewById(R.id.editText22);
+//		if(tablero[2][3]!=0){
+//			text3_4.setText(tablero[2][3]);
+//			text3_4.setEnabled(false);
+//		}
+//		
+//		text3_5 = (TextView) findViewById(R.id.editText23);
+//		if(tablero[2][4]!=0){
+//			text3_5.setText(tablero[2][4]);
+//			text3_5.setEnabled(false);
+//		}
+//		
+//		text3_6 = (TextView) findViewById(R.id.editText24);
+//		if(tablero[2][5]!=0){
+//			text3_6.setText(tablero[2][5]);
+//			text3_6.setEnabled(false);
+//		}
+//		
+//		text3_7 = (TextView) findViewById(R.id.editText25);
+//		if(tablero[2][6]!=0){
+//			text3_7.setText(tablero[2][6]);
+//			text3_7.setEnabled(false);
+//		}
+//		
+//		text3_8 = (TextView) findViewById(R.id.editText26);
+//		if(tablero[2][7]!=0){
+//			text3_8.setText(tablero[2][7]);
+//			text3_8.setEnabled(false);
+//		}
+//		
+//		text3_9 = (TextView) findViewById(R.id.editText27);
+//		if(tablero[2][8]!=0){
+//			text3_9.setText(tablero[2][8]);
+//			text3_9.setEnabled(false);
+//		}
+//		
+//		text4_1 = (TextView) findViewById(R.id.editText28);
+//		if(tablero[3][0]!=0){
+//			text4_1.setText(tablero[3][0]);
+//			text4_1.setEnabled(false);
+//		}
+//		
+//		text4_2 = (TextView) findViewById(R.id.editText29);
+//		if(tablero[3][1]!=0){
+//			text4_2.setText(tablero[3][1]);
+//			text4_2.setEnabled(false);
+//		}
+//		
+//		text4_3 = (TextView) findViewById(R.id.editText30);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_4 = (TextView) findViewById(R.id.editText31);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_5 = (TextView) findViewById(R.id.editText32);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_6 = (TextView) findViewById(R.id.editText33);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_7 = (TextView) findViewById(R.id.editText34);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_8 = (TextView) findViewById(R.id.editText35);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text4_9 = (TextView) findViewById(R.id.editText36);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_1 = (TextView) findViewById(R.id.editText37);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_2 = (TextView) findViewById(R.id.editText38);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_3 = (TextView) findViewById(R.id.editText39);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_4 = (TextView) findViewById(R.id.editText40);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_5 = (TextView) findViewById(R.id.editText41);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_6 = (TextView) findViewById(R.id.editText42);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_7 = (TextView) findViewById(R.id.editText43);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_8 = (TextView) findViewById(R.id.editText44);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text5_9 = (TextView) findViewById(R.id.editText45);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_1 = (TextView) findViewById(R.id.editText46);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_2 = (TextView) findViewById(R.id.editText47);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_3 = (TextView) findViewById(R.id.editText48);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_4 = (TextView) findViewById(R.id.editText49);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_5 = (TextView) findViewById(R.id.editText50);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_6 = (TextView) findViewById(R.id.editText51);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_7 = (TextView) findViewById(R.id.editText52);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_8 = (TextView) findViewById(R.id.editText53);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text6_9 = (TextView) findViewById(R.id.editText54);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_1 = (TextView) findViewById(R.id.editText55);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_2 = (TextView) findViewById(R.id.editText56);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_3 = (TextView) findViewById(R.id.editText57);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_4 = (TextView) findViewById(R.id.editText58);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_5 = (TextView) findViewById(R.id.editText59);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_6 = (TextView) findViewById(R.id.editText60);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_7 = (TextView) findViewById(R.id.editText61);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_8 = (TextView) findViewById(R.id.editText62);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text7_9 = (TextView) findViewById(R.id.editText63);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_1 = (TextView) findViewById(R.id.editText64);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_2 = (TextView) findViewById(R.id.editText65);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_3 = (TextView) findViewById(R.id.editText66);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_4 = (TextView) findViewById(R.id.editText67);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_5 = (TextView) findViewById(R.id.editText68);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_6 = (TextView) findViewById(R.id.editText69);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_7 = (TextView) findViewById(R.id.editText70);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_8 = (TextView) findViewById(R.id.editText71);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text8_9 = (TextView) findViewById(R.id.editText72);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_1 = (TextView) findViewById(R.id.editText73);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_2 = (TextView) findViewById(R.id.editText74);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_3 = (TextView) findViewById(R.id.editText75);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_4 = (TextView) findViewById(R.id.editText76);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_5 = (TextView) findViewById(R.id.editText77);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_6 = (TextView) findViewById(R.id.editText78);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_7 = (TextView) findViewById(R.id.editText79);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_8 = (TextView) findViewById(R.id.editText80);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
+//		
+//		text9_9 = (TextView) findViewById(R.id.editText81);
+//		if(tablero[0][0]!=0){
+//			text1_1.setText(tablero[0][0]);
+//			text1_1.setEnabled(false);
+//		}
 	}
 }
