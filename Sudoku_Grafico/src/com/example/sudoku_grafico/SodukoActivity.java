@@ -267,400 +267,400 @@ public class SodukoActivity extends Activity{
 			text2_6.setEnabled(false);
 		}
 		
-//		text2_7 = (TextView) findViewById(R.id.editText16);
-//		if(tablero[1][6]!=0){
-//			text2_7.setText(tablero[1][6]);
-//			text2_7.setEnabled(false);
-//		}
-//		
-//		text2_8 = (TextView) findViewById(R.id.editText17);
-//		if(tablero[1][7]!=0){
-//			text2_8.setText(tablero[1][7]);
-//			text2_8.setEnabled(false);
-//		}
-//		
-//		text2_9 = (TextView) findViewById(R.id.editText18);
-//		if(tablero[1][8]!=0){
-//			text2_9.setText(tablero[1][8]);
-//			text2_9.setEnabled(false);
-//		}
-//		
-//		text3_1 = (TextView) findViewById(R.id.editText19);
-//		if(tablero[2][0]!=0){
-//			text3_1.setText(tablero[2][0]);
-//			text3_1.setEnabled(false);
-//		}
-//		
-//		text3_2 = (TextView) findViewById(R.id.editText20);
-//		if(tablero[2][1]!=0){
-//			text3_2.setText(tablero[2][1]);
-//			text3_2.setEnabled(false);
-//		}
-//		
-//		text3_3 = (TextView) findViewById(R.id.editText21);
-//		if(tablero[2][2]!=0){
-//			text3_3.setText(tablero[2][2]);
-//			text3_3.setEnabled(false);
-//		}
-//		
-//		text3_4 = (TextView) findViewById(R.id.editText22);
-//		if(tablero[2][3]!=0){
-//			text3_4.setText(tablero[2][3]);
-//			text3_4.setEnabled(false);
-//		}
-//		
-//		text3_5 = (TextView) findViewById(R.id.editText23);
-//		if(tablero[2][4]!=0){
-//			text3_5.setText(tablero[2][4]);
-//			text3_5.setEnabled(false);
-//		}
-//		
-//		text3_6 = (TextView) findViewById(R.id.editText24);
-//		if(tablero[2][5]!=0){
-//			text3_6.setText(tablero[2][5]);
-//			text3_6.setEnabled(false);
-//		}
-//		
-//		text3_7 = (TextView) findViewById(R.id.editText25);
-//		if(tablero[2][6]!=0){
-//			text3_7.setText(tablero[2][6]);
-//			text3_7.setEnabled(false);
-//		}
-//		
-//		text3_8 = (TextView) findViewById(R.id.editText26);
-//		if(tablero[2][7]!=0){
-//			text3_8.setText(tablero[2][7]);
-//			text3_8.setEnabled(false);
-//		}
-//		
-//		text3_9 = (TextView) findViewById(R.id.editText27);
-//		if(tablero[2][8]!=0){
-//			text3_9.setText(tablero[2][8]);
-//			text3_9.setEnabled(false);
-//		}
-//		
-//		text4_1 = (TextView) findViewById(R.id.editText28);
-//		if(tablero[3][0]!=0){
-//			text4_1.setText(tablero[3][0]);
-//			text4_1.setEnabled(false);
-//		}
-//		
-//		text4_2 = (TextView) findViewById(R.id.editText29);
-//		if(tablero[3][1]!=0){
-//			text4_2.setText(tablero[3][1]);
-//			text4_2.setEnabled(false);
-//		}
-//		
-//		text4_3 = (TextView) findViewById(R.id.editText30);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_4 = (TextView) findViewById(R.id.editText31);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_5 = (TextView) findViewById(R.id.editText32);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_6 = (TextView) findViewById(R.id.editText33);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_7 = (TextView) findViewById(R.id.editText34);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_8 = (TextView) findViewById(R.id.editText35);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text4_9 = (TextView) findViewById(R.id.editText36);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_1 = (TextView) findViewById(R.id.editText37);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_2 = (TextView) findViewById(R.id.editText38);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_3 = (TextView) findViewById(R.id.editText39);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_4 = (TextView) findViewById(R.id.editText40);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_5 = (TextView) findViewById(R.id.editText41);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_6 = (TextView) findViewById(R.id.editText42);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_7 = (TextView) findViewById(R.id.editText43);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_8 = (TextView) findViewById(R.id.editText44);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text5_9 = (TextView) findViewById(R.id.editText45);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_1 = (TextView) findViewById(R.id.editText46);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_2 = (TextView) findViewById(R.id.editText47);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_3 = (TextView) findViewById(R.id.editText48);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_4 = (TextView) findViewById(R.id.editText49);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_5 = (TextView) findViewById(R.id.editText50);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_6 = (TextView) findViewById(R.id.editText51);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_7 = (TextView) findViewById(R.id.editText52);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_8 = (TextView) findViewById(R.id.editText53);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text6_9 = (TextView) findViewById(R.id.editText54);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_1 = (TextView) findViewById(R.id.editText55);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_2 = (TextView) findViewById(R.id.editText56);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_3 = (TextView) findViewById(R.id.editText57);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_4 = (TextView) findViewById(R.id.editText58);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_5 = (TextView) findViewById(R.id.editText59);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_6 = (TextView) findViewById(R.id.editText60);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_7 = (TextView) findViewById(R.id.editText61);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_8 = (TextView) findViewById(R.id.editText62);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text7_9 = (TextView) findViewById(R.id.editText63);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_1 = (TextView) findViewById(R.id.editText64);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_2 = (TextView) findViewById(R.id.editText65);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_3 = (TextView) findViewById(R.id.editText66);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_4 = (TextView) findViewById(R.id.editText67);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_5 = (TextView) findViewById(R.id.editText68);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_6 = (TextView) findViewById(R.id.editText69);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_7 = (TextView) findViewById(R.id.editText70);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_8 = (TextView) findViewById(R.id.editText71);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text8_9 = (TextView) findViewById(R.id.editText72);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_1 = (TextView) findViewById(R.id.editText73);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_2 = (TextView) findViewById(R.id.editText74);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_3 = (TextView) findViewById(R.id.editText75);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_4 = (TextView) findViewById(R.id.editText76);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_5 = (TextView) findViewById(R.id.editText77);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_6 = (TextView) findViewById(R.id.editText78);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_7 = (TextView) findViewById(R.id.editText79);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_8 = (TextView) findViewById(R.id.editText80);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
-//		
-//		text9_9 = (TextView) findViewById(R.id.editText81);
-//		if(tablero[0][0]!=0){
-//			text1_1.setText(tablero[0][0]);
-//			text1_1.setEnabled(false);
-//		}
+		text2_7 = (EditText) findViewById(R.id.editText16);
+		if(tablero[1][6]!=0){
+			text2_7.setText(""+tablero[1][6]);
+			text2_7.setEnabled(false);
+		}
+		
+		text2_8 = (EditText) findViewById(R.id.editText17);
+		if(tablero[1][7]!=0){
+			text2_8.setText(""+tablero[1][7]);
+			text2_8.setEnabled(false);
+		}
+		
+		text2_9 = (EditText) findViewById(R.id.editText18);
+		if(tablero[1][8]!=0){
+			text2_9.setText(""+tablero[1][8]);
+			text2_9.setEnabled(false);
+		}
+		
+		text3_1 = (EditText) findViewById(R.id.editText19);
+		if(tablero[2][0]!=0){
+			text3_1.setText(""+tablero[2][0]);
+			text3_1.setEnabled(false);
+		}
+		
+		text3_2 = (EditText) findViewById(R.id.editText20);
+		if(tablero[2][1]!=0){
+			text3_2.setText(""+tablero[2][1]);
+			text3_2.setEnabled(false);
+		}
+		
+		text3_3 = (EditText) findViewById(R.id.editText21);
+		if(tablero[2][2]!=0){
+			text3_3.setText(""+tablero[2][2]);
+			text3_3.setEnabled(false);
+		}
+		
+		text3_4 = (EditText) findViewById(R.id.editText22);
+		if(tablero[2][3]!=0){
+			text3_4.setText(""+tablero[2][3]);
+			text3_4.setEnabled(false);
+		}
+		
+		text3_5 = (EditText) findViewById(R.id.editText23);
+		if(tablero[2][4]!=0){
+			text3_5.setText(""+tablero[2][4]);
+			text3_5.setEnabled(false);
+		}
+		
+		text3_6 = (EditText) findViewById(R.id.editText24);
+		if(tablero[2][5]!=0){
+			text3_6.setText(""+tablero[2][5]);
+			text3_6.setEnabled(false);
+		}
+		
+		text3_7 = (EditText) findViewById(R.id.editText25);
+		if(tablero[2][6]!=0){
+			text3_7.setText(""+tablero[2][6]);
+			text3_7.setEnabled(false);
+		}
+		
+		text3_8 = (EditText) findViewById(R.id.editText26);
+		if(tablero[2][7]!=0){
+			text3_8.setText(""+tablero[2][7]);
+			text3_8.setEnabled(false);
+		}
+		
+		text3_9 = (EditText) findViewById(R.id.editText27);
+		if(tablero[2][8]!=0){
+			text3_9.setText(""+tablero[2][8]);
+			text3_9.setEnabled(false);
+		}
+		
+		text4_1 = (EditText) findViewById(R.id.editText28);
+		if(tablero[3][0]!=0){
+			text4_1.setText(""+tablero[3][0]);
+			text4_1.setEnabled(false);
+		}
+		
+		text4_2 = (EditText) findViewById(R.id.editText29);
+		if(tablero[3][1]!=0){
+			text4_2.setText(""+tablero[3][1]);
+			text4_2.setEnabled(false);
+		}
+		
+		text4_3 = (EditText) findViewById(R.id.editText30);
+		if(tablero[3][2]!=0){
+			text1_1.setText(""+tablero[3][2]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_4 = (EditText) findViewById(R.id.editText31);
+		if(tablero[3][3]!=0){
+			text1_1.setText(""+tablero[3][3]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_5 = (EditText) findViewById(R.id.editText32);
+		if(tablero[3][4]!=0){
+			text1_1.setText(""+tablero[3][4]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_6 = (EditText) findViewById(R.id.editText33);
+		if(tablero[3][5]!=0){
+			text1_1.setText(""+tablero[3][5]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_7 = (EditText) findViewById(R.id.editText34);
+		if(tablero[3][6]!=0){
+			text1_1.setText(""+tablero[3][6]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_8 = (EditText) findViewById(R.id.editText35);
+		if(tablero[3][7]!=0){
+			text1_1.setText(""+tablero[3][7]);
+			text1_1.setEnabled(false);
+		}
+		
+		text4_9 = (EditText) findViewById(R.id.editText36);
+		if(tablero[3][8]!=0){
+			text1_1.setText(""+tablero[3][8]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_1 = (EditText) findViewById(R.id.editText37);
+		if(tablero[4][0]!=0){
+			text1_1.setText(""+tablero[4][0]);
+			text1_1.setEnabled(false);
+		}
+		//Editar desde acá
+		text5_2 = (EditText) findViewById(R.id.editText38);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_3 = (EditText) findViewById(R.id.editText39);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_4 = (EditText) findViewById(R.id.editText40);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_5 = (EditText) findViewById(R.id.editText41);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_6 = (EditText) findViewById(R.id.editText42);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_7 = (EditText) findViewById(R.id.editText43);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_8 = (EditText) findViewById(R.id.editText44);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text5_9 = (EditText) findViewById(R.id.editText45);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_1 = (EditText) findViewById(R.id.editText46);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_2 = (EditText) findViewById(R.id.editText47);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_3 = (EditText) findViewById(R.id.editText48);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_4 = (EditText) findViewById(R.id.editText49);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_5 = (EditText) findViewById(R.id.editText50);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_6 = (EditText) findViewById(R.id.editText51);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_7 = (EditText) findViewById(R.id.editText52);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_8 = (EditText) findViewById(R.id.editText53);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text6_9 = (EditText) findViewById(R.id.editText54);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_1 = (EditText) findViewById(R.id.editText55);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_2 = (EditText) findViewById(R.id.editText56);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_3 = (EditText) findViewById(R.id.editText57);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_4 = (EditText) findViewById(R.id.editText58);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_5 = (EditText) findViewById(R.id.editText59);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_6 = (EditText) findViewById(R.id.editText60);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_7 = (EditText) findViewById(R.id.editText61);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_8 = (EditText) findViewById(R.id.editText62);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text7_9 = (EditText) findViewById(R.id.editText63);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_1 = (EditText) findViewById(R.id.editText64);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_2 = (EditText) findViewById(R.id.editText65);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_3 = (EditText) findViewById(R.id.editText66);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_4 = (EditText) findViewById(R.id.editText67);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_5 = (EditText) findViewById(R.id.editText68);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_6 = (EditText) findViewById(R.id.editText69);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_7 = (EditText) findViewById(R.id.editText70);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_8 = (EditText) findViewById(R.id.editText71);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text8_9 = (EditText) findViewById(R.id.editText72);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_1 = (EditText) findViewById(R.id.editText73);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_2 = (EditText) findViewById(R.id.editText74);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_3 = (EditText) findViewById(R.id.editText75);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_4 = (EditText) findViewById(R.id.editText76);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_5 = (EditText) findViewById(R.id.editText77);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_6 = (EditText) findViewById(R.id.editText78);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_7 = (EditText) findViewById(R.id.editText79);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_8 = (EditText) findViewById(R.id.editText80);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
+		
+		text9_9 = (EditText) findViewById(R.id.editText81);
+		if(tablero[0][0]!=0){
+			text1_1.setText(tablero[0][0]);
+			text1_1.setEnabled(false);
+		}
 	}
 }
