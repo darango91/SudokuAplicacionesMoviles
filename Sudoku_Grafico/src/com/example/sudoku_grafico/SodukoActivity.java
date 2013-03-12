@@ -21,6 +21,15 @@ public class SodukoActivity extends Activity implements OnKeyListener {
 	private TextView timeString;
 	private Handler handler; 
 	private Timer timer;
+	private int[][] board = {{8, 0, 0, 0, 0, 0, 0, 0, 6},
+				            {0, 0, 4, 8, 0, 3, 9, 0, 0},
+				            {0, 0, 3, 0, 0, 0, 7, 0, 0},
+				            {0, 7, 0, 2, 0, 5, 0, 1, 0},
+				            {0, 0, 0, 0, 1, 0, 0, 0, 0},
+				            {0, 3, 0, 9, 0, 7, 0, 6, 0},
+				            {0, 0, 7, 0, 0, 0, 2, 0, 0},
+				            {0, 0, 1, 7, 0, 4, 5, 0, 0},
+				            {5, 0, 0, 0, 0, 0, 0, 0, 8}};
 	private String sudoku;
 	private Button solucionar;
 	private Button verificar;
@@ -44,7 +53,6 @@ public class SodukoActivity extends Activity implements OnKeyListener {
 
 				handler.post(new Runnable(){
 					public void run() {
-						
 						totalEnSeg++;
 						if(seg<60){
 							seg++;
@@ -55,13 +63,9 @@ public class SodukoActivity extends Activity implements OnKeyListener {
 								h++;
 							}
 						}
-						
 						String str = h+":"+min+":"+seg;
-						
 						showTime(str);
-
 				}});
-
 			}
 		};
 		
@@ -139,6 +143,7 @@ public class SodukoActivity extends Activity implements OnKeyListener {
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 }
