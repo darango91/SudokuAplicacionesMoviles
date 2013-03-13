@@ -12,10 +12,11 @@ public final class R {
     }
     public static final class drawable {
         public static final int fondo=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int images=0x7f020002;
-        public static final int pause=0x7f020003;
-        public static final int play=0x7f020004;
+        public static final int fondo1=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int images=0x7f020003;
+        public static final int pause=0x7f020004;
+        public static final int play=0x7f020005;
     }
     public static final class id {
         public static final int Button01=0x7f080060;

@@ -136,6 +136,7 @@ public class SudukoActivity extends Activity{
 		verificar.setOnClickListener(
 				new OnClickListener() {
 					public void onClick(View v) {
+						
 						//Llama al método de verificación de sudokus
 					}
 				}
