@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+
 public class MainActivity extends Activity {
 	private Button button1;
 	private Button button2;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
 		button1 = (Button) findViewById(R.id.Button03);
 		button2 = (Button) findViewById(R.id.button2);
 		evento();
+			
 		webSer("app-appmovil.rhcloud.com");
 		
 	}

@@ -1,6 +1,6 @@
 package com.example.sudoku_grafico.util;
 
-abstract class SudoSolucionador {
+public class SudoSolucionador {
     private TableroSudoku ts;    // Puzzle to solve;
 
     public SudoSolucionador(TableroSudoku ts) {
@@ -43,5 +43,9 @@ abstract class SudoSolucionador {
         }
         ts.setCelda(ts.VACIO, fila, col);
         return false;
+    }
+    
+    public int[][] retornaTablero(){
+    	return ts.getTablero();
     }
 }

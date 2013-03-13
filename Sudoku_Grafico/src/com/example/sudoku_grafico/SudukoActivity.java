@@ -3,16 +3,13 @@ package com.example.sudoku_grafico;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.sudoku_grafico.util.Util;
+import com.example.sudoku_grafico.util.*;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.Editable;
-import android.text.method.KeyListener;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -50,6 +47,9 @@ public class SudukoActivity extends Activity{
 					text9_1, text9_2, text9_3, text9_4, text9_5, text9_6, text9_7, text9_8, text9_9;
 	private int seg = 0, min = 0, h = 0, estado = 0;
 	int horas = 0, minutos = 0, segundos = 0; //Para modificar el estado.
+	
+	private TableroSudoku ts = new TableroSudoku(tablero);
+	private SudoSolucionador ss = new SudoSolucionador(ts);
 	
 	private TimerTask tarea = new TimerTask(){
 		@Override
@@ -111,13 +111,10 @@ public class SudukoActivity extends Activity{
 						segundos = seg;
 						estado = 1;
 					}else{//Estaba pausado y lo va activar
-						
 						pausaPlay.setText("||");
-						
 						h = horas;
 						min = minutos;
 						seg = segundos;
-						
 						estado = 0;
 					}
 				}
@@ -128,7 +125,10 @@ public class SudukoActivity extends Activity{
 			new OnClickListener() {
 				public void onClick(View v) {
 					MessageBox("Lo voy a resolver -_-");
-					//Llama al método de solución de sudokus
+					ss.adivina(0, 0);
+					int[][] tab = ss.retornaTablero();
+					tablero = tab;
+					incializarBotonesCamposTexto();
 				}
 			}
 		);

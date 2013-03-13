@@ -26,4 +26,8 @@ public class TableroSudoku {
     public int getCelda(int fila, int col) {
         return tablero[fila][col];
     }
+    
+    public int[][] getTablero(){
+    	return this.tablero;
+    }
 }
