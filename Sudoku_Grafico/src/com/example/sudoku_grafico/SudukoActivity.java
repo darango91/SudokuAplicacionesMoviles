@@ -49,7 +49,29 @@ public class SudukoActivity extends Activity{
 					text8_1, text8_2, text8_3, text8_4, text8_5, text8_6, text8_7, text8_8, text8_9,
 					text9_1, text9_2, text9_3, text9_4, text9_5, text9_6, text9_7, text9_8, text9_9;
 	private int seg = 0, min = 0, h = 0, estado = 0;
+	int horas = 0, minutos = 0, segundos = 0; //Para modificar el estado.
+	
+	private TimerTask tarea = new TimerTask(){
+		@Override
+		public void run() {
 
+			handler.post(new Runnable(){
+				public void run() {
+					if(seg<60){
+						seg++;
+					}else{
+						seg = 0;
+						min++;
+						if(min==60){
+							h++;
+						}
+					}
+					String str = h+":"+min+":"+seg;
+					showTime(str);
+			}});
+		}
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,27 +84,6 @@ public class SudukoActivity extends Activity{
 		
 		incializarBotonesCamposTexto();
 		eventos();
-		
-		TimerTask tarea = new TimerTask(){
-			@Override
-			public void run() {
-
-				handler.post(new Runnable(){
-					public void run() {
-						if(seg<60){
-							seg++;
-						}else{
-							seg = 0;
-							min++;
-							if(min==60){
-								h++;
-							}
-						}
-						String str = h+":"+min+":"+seg;
-						showTime(str);
-				}});
-			}
-		};
 		
 		timer = new Timer();
 		timer.schedule(tarea, 0, 1000);
@@ -102,16 +103,22 @@ public class SudukoActivity extends Activity{
 			new OnClickListener() {
 				public void onClick(View v) {
 					//Pausa, reanuda el juego
+					int horas = 0, minutos = 0, segundos = 0;
 					if(estado==0){//Estaba activo y va a pausarlo
-						try {
-							timer.wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						pausaPlay.setText("|>");
+						horas = h;
+						minutos = min;
+						segundos = seg;
 						estado = 1;
 					}else{//Estaba pausado y lo va activar
 						
+						pausaPlay.setText("||");
+						
+						h = horas;
+						min = minutos;
+						seg = segundos;
+						
+						estado = 0;
 					}
 				}
 			}
