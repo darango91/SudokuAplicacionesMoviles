@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="6"
         android:targetSdkVersion="17" />
     
 	<uses-permission android:name="android.permission.INTERNET"/>
@@ -30,7 +30,7 @@
             android:label="@string/title_activity_sudoku" >
         </activity>
         <activity
-            android:name="com.example.sudoku_grafico.SodukoActivity"
+            android:name="com.example.sudoku_grafico.SudukoActivity"
             android:label="@string/title_activity_soduko" >
         </activity>
         

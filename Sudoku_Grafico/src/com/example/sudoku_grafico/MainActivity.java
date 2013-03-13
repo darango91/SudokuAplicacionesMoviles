@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		button1 = (Button) findViewById(R.id.button1);
+		button1 = (Button) findViewById(R.id.Button03);
 		button2 = (Button) findViewById(R.id.button2);
 		evento();
 		webSer("app-appmovil.rhcloud.com");
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void intent_sudoku(int codigo){
-		Intent abrirSudoku= new Intent(getApplicationContext(), SodukoActivity.class);
+		Intent abrirSudoku= new Intent(getApplicationContext(), SudukoActivity.class);
 		startActivityForResult(abrirSudoku, codigo);
 	}
 	public static JSONObject webSer(String serviceUrl) {

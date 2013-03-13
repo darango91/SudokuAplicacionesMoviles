@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
-    tools:context=".SodukoActivity" >
+    tools:context=".SudukoActivity" >
 
     <ImageView
         android:id="@+id/imageView1"
@@ -907,9 +907,10 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/Button01"
         android:layout_alignBottom="@+id/Button01"
         android:layout_alignRight="@+id/tableLayout1"
+        android:layout_alignTop="@+id/Button01"
+        android:minWidth="64dp"
         android:text="Validar" />
 
     <TextView
@@ -922,5 +923,14 @@
         android:text="00:00:00"
         android:textStyle="bold"
         tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/Button03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:text="||" />
 
 </RelativeLayout>
