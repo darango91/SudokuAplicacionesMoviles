@@ -5,15 +5,6 @@
     android:gravity="top"
     tools:context=".SudukoActivity" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/fondo1" />
-
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
@@ -40,7 +31,8 @@
                 android:inputType="number"
                 android:maxLength="@integer/maxLenght_texts" >
 
-                <requestFocus />
+                <requestFocus android:layout_width="match_parent" />
+
             </EditText>
 
             <EditText
@@ -348,7 +340,8 @@
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp" >
 
             <EditText
                 android:id="@+id/editText28"
@@ -667,7 +660,8 @@
         <TableRow
             android:id="@+id/tableRow7"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp" >
 
             <EditText
                 android:id="@+id/editText55"
@@ -982,27 +976,6 @@
         </TableRow>
     </TableLayout>
 
-
-
-    <Button
-        android:id="@+id/Button01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tableLayout1"
-        android:layout_below="@+id/tableLayout1"
-        android:text="Solucion" />
-
-    <Button
-        android:id="@+id/Button02"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/Button01"
-        android:layout_alignRight="@+id/tableLayout1"
-        android:layout_alignTop="@+id/Button01"
-        android:minWidth="64dp"
-        android:text="Validar" />
-
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
@@ -1010,17 +983,48 @@
         android:layout_below="@+id/Button02"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="00:00:00"
+        android:text="@string/startTime"
         android:textStyle="bold"
         tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/Button01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tableLayout1"
+        android:layout_below="@+id/tableLayout1"
+        android:layout_marginTop="14dp"
+        android:text="@string/solve" />
+
+    <Button
+        android:id="@+id/Button02"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/tableLayout1"
+        android:layout_alignTop="@+id/Button01"
+        android:minWidth="64dp"
+        android:text="@string/validate" />
 
     <Button
         android:id="@+id/Button03"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/time"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="16dp"
-        android:text="||" />
+        android:layout_alignLeft="@+id/time"
+        android:layout_alignTop="@+id/Button02"
+        android:layout_marginLeft="18dp"
+        android:text="@string/pause" />
+
+    <ImageButton
+        android:id="@+id/imageButton01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/time"
+        android:layout_alignRight="@+id/Button02"
+        android:adjustViewBounds="true"
+        android:contentDescription="TODO"
+        android:maxHeight="40dp"
+        android:maxWidth="40dp"
+        android:src="@drawable/restart1" />
 
 </RelativeLayout>
