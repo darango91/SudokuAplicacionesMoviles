@@ -11,19 +11,21 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int fondo=0x7f020000;
-        public static final int fondo1=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int images=0x7f020003;
-        public static final int pause=0x7f020004;
-        public static final int play=0x7f020005;
-        public static final int restart=0x7f020006;
-        public static final int restart1=0x7f020007;
+        public static final int facebook=0x7f020000;
+        public static final int fondo=0x7f020001;
+        public static final int fondo1=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int images=0x7f020004;
+        public static final int pause=0x7f020005;
+        public static final int play=0x7f020006;
+        public static final int restart=0x7f020007;
+        public static final int restart1=0x7f020008;
     }
     public static final class id {
         public static final int Button01=0x7f080061;
         public static final int Button02=0x7f080060;
         public static final int Button03=0x7f080003;
+        public static final int button1=0x7f080063;
         public static final int button2=0x7f080001;
         public static final int button3=0x7f080000;
         public static final int button4=0x7f080002;
@@ -109,7 +111,8 @@ public final class R {
         public static final int editText81=0x7f08005e;
         public static final int editText9=0x7f08000e;
         public static final int imageButton01=0x7f080062;
-        public static final int menu_settings=0x7f080063;
+        public static final int imageButton1=0x7f080064;
+        public static final int menu_settings=0x7f080065;
         public static final int tableLayout1=0x7f080004;
         public static final int tableRow1=0x7f080005;
         public static final int tableRow2=0x7f08000f;
@@ -139,6 +142,7 @@ public final class R {
         public static final int Play=0x7f050008;
         public static final int app_name=0x7f050000;
         public static final int end_game=0x7f050009;
+        public static final int exit=0x7f05000a;
         public static final int hello_world=0x7f050001;
         public static final int menu_settings=0x7f050002;
         public static final int pause=0x7f050004;
