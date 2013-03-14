@@ -26,13 +26,10 @@
             
         </activity>
         <activity
-            android:name="com.example.sudoku_grafico.SudokuActivity"
-            android:label="@string/title_activity_sudoku" >
-        </activity>
-        <activity
             android:name="com.example.sudoku_grafico.SudukoActivity"
             android:label="@string/title_activity_sudoku" >
         </activity>
+        <activity android:name="com.example.sudoku_grafico.FinishActivity"></activity>
         
         
        

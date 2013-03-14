@@ -21,7 +21,7 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 	private Button button1;
 	private Button button2;
-	public int codigo =1;
+	public int codigo = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

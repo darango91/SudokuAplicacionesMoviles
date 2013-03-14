@@ -10,5 +10,6 @@
     <string name="validate">Validar</string>
     <string name="startTime">00:00:00</string>
     <string name="Play">|&gt;</string>
+    <string name="end_game">¡Felicitaciones!\nHas logrado terminar el juego</string>
 
 </resources>

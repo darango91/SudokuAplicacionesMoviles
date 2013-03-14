@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -38,7 +39,7 @@ public class SudukoActivity extends Activity{
 	private int[][] tableroCopia = tablero;
 	private int[][] tableroResuelto = new int[9][9];
 	
-	private String sudoku;
+	private String sudoku, str = "";
 	private Button solucionar, verificar, pausaPlay;
 	private ImageButton restart;
 	private EditText text1_1, text1_2, text1_3, text1_4, text1_5, text1_6, text1_7, text1_8, text1_9,
@@ -51,8 +52,7 @@ public class SudukoActivity extends Activity{
 					text8_1, text8_2, text8_3, text8_4, text8_5, text8_6, text8_7, text8_8, text8_9,
 					text9_1, text9_2, text9_3, text9_4, text9_5, text9_6, text9_7, text9_8, text9_9;
 	
-	private int seg = 0, min = 0, h = 0, estado = 0;
-	int horas = 0, minutos = 0, segundos = 0; //Para modificar el estado.
+	private int seg = 0, min = 0, h = 0, estado = 0, totalSeg = 0;
 	
 	private TableroSudoku ts = new TableroSudoku(tableroCopia);
 	private SudoSolucionador ss = new SudoSolucionador(ts);
@@ -107,6 +107,8 @@ public class SudukoActivity extends Activity{
 					ss.adivina(0,0);
 					tableroResuelto = ss.retornaTablero();
 					ponerResuelto();
+					timer.cancel();
+					timer.purge();
 				}
 			}
 		);
@@ -114,8 +116,15 @@ public class SudukoActivity extends Activity{
 		verificar.setOnClickListener(
 				new OnClickListener() {
 					public void onClick(View v) {
-						
-						//Llama al método de verificación de sudokus
+						boolean es = ts.estaCorrecto();
+						timer.cancel();
+						timer.purge();
+						if(es){
+							intent_terminar(2);
+						}else{//Aqui se crearía un dialogo indicando que esta mala la solución y que si se quiere continuar
+							//o salir del juego
+							MessageBox("Value: "+es);
+						}
 					}
 				}
 			);
@@ -123,7 +132,7 @@ public class SudukoActivity extends Activity{
 		restart.setOnClickListener(
 				new OnClickListener() {
 					public void onClick(View v) {
-						MessageBox("No pudiste hacerlo bien T_T (Jaja!)");
+						MessageBox("No pudiste hacerlo T_T (Já já!)");
 						incializarBotonesCamposTexto();
 						h=0; min=0; seg=0;
 						timer.cancel();
@@ -133,7 +142,7 @@ public class SudukoActivity extends Activity{
 				}
 			);		
 		
-		//Eventos de los botones
+		//Eventos de los textos
 		text1_1.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
@@ -144,6 +153,13 @@ public class SudukoActivity extends Activity{
 		});
 	}
 
+	private void intent_terminar(int codigo){
+		Intent i = new Intent(getApplicationContext(), FinishActivity.class);
+		i.putExtra("Tiempo", str);
+		i.putExtra("Tiempo_int", totalSeg);
+		startActivityForResult(i, codigo);
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -191,7 +207,8 @@ public class SudukoActivity extends Activity{
 								h++;
 							}
 						}
-						String str = "";
+						totalSeg++;
+						str = "";
 						if(h<10&&min<10&&seg<10){
 							str = "0"+h+":0"+min+":0"+seg;
 						}else if(h<10&&min<10&&seg>=10){
@@ -215,7 +232,7 @@ public class SudukoActivity extends Activity{
 	}
 	
 	public void MessageBox(String message){
-	    Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+	    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
 	}
 		
 	public void incializarBotonesCamposTexto(){
