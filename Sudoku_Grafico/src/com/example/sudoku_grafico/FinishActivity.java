@@ -33,14 +33,22 @@ public class FinishActivity extends Activity{
 		Bundle bundle = getIntent().getExtras();
 		String str = bundle.getString("Tiempo");
 		int totalSeg = bundle.getInt("Tiempo_int");
+		boolean es = bundle.getBoolean("Validacion");
 		
-		String txt = "¡Felicitaciones!\n"+
+		String txt = "";
+		
+		if(es){
+			txt = "¡Felicitaciones!\n"+
 					 "Has terminado el sudoku del dia\n" +
 					 "Te has tardado: "+totalSeg+" seg en resolverlo\n" +
 					 "eso es: "+str;
+		}else{
+			txt = "Lo sentimos, la respuesta no es correcta.";
+		}
+		
 		textoFelicitaciones = (EditText) findViewById(R.id.editText1);
 		textoFelicitaciones.setText(txt);
-
+		
 		MessageBox("El tiempo total fué: "+str+"\nEso en segundos es: "+totalSeg+"seg.");
 		
 	}

@@ -11,6 +11,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -28,35 +30,37 @@ public class SudukoActivity extends Activity{
 	private Handler handler; 
 	private Timer timer;
 	private int[][] tablero =  {{8, 0, 0, 0, 0, 0, 0, 0, 6},
-					            {0, 0, 4, 8, 0, 3, 9, 0, 0},
-					            {0, 0, 3, 0, 0, 0, 7, 0, 0},
-					            {0, 7, 0, 2, 0, 5, 0, 1, 0},
-					            {0, 0, 0, 0, 1, 0, 0, 0, 0},
-					            {0, 3, 0, 9, 0, 7, 0, 6, 0},
-					            {0, 0, 7, 0, 0, 0, 2, 0, 0},
-					            {0, 0, 1, 7, 0, 4, 5, 0, 0},
-					            {5, 0, 0, 0, 0, 0, 0, 0, 8}};
+			{0, 0, 4, 8, 0, 3, 9, 0, 0},
+			{0, 0, 3, 0, 0, 0, 7, 0, 0},
+			{0, 7, 0, 2, 0, 5, 0, 1, 0},
+			{0, 0, 0, 0, 1, 0, 0, 0, 0},
+			{0, 3, 0, 9, 0, 7, 0, 6, 0},
+			{0, 0, 7, 0, 0, 0, 2, 0, 0},
+			{0, 0, 1, 7, 0, 4, 5, 0, 0},
+			{5, 0, 0, 0, 0, 0, 0, 0, 8}};
 	private int[][] tableroCopia = tablero;
 	private int[][] tableroResuelto = new int[9][9];
-	
+
 	private String sudoku, str = "";
 	private Button solucionar, verificar, pausaPlay;
 	private ImageButton restart;
 	private EditText text1_1, text1_2, text1_3, text1_4, text1_5, text1_6, text1_7, text1_8, text1_9,
-					text2_1, text2_2, text2_3, text2_4, text2_5, text2_6, text2_7, text2_8, text2_9,
-					text3_1, text3_2, text3_3, text3_4, text3_5, text3_6, text3_7, text3_8, text3_9,
-					text4_1, text4_2, text4_3, text4_4, text4_5, text4_6, text4_7, text4_8, text4_9,
-					text5_1, text5_2, text5_3, text5_4, text5_5, text5_6, text5_7, text5_8, text5_9,
-					text6_1, text6_2, text6_3, text6_4, text6_5, text6_6, text6_7, text6_8, text6_9,
-					text7_1, text7_2, text7_3, text7_4, text7_5, text7_6, text7_7, text7_8, text7_9,
-					text8_1, text8_2, text8_3, text8_4, text8_5, text8_6, text8_7, text8_8, text8_9,
-					text9_1, text9_2, text9_3, text9_4, text9_5, text9_6, text9_7, text9_8, text9_9;
-	
+	text2_1, text2_2, text2_3, text2_4, text2_5, text2_6, text2_7, text2_8, text2_9,
+	text3_1, text3_2, text3_3, text3_4, text3_5, text3_6, text3_7, text3_8, text3_9,
+	text4_1, text4_2, text4_3, text4_4, text4_5, text4_6, text4_7, text4_8, text4_9,
+	text5_1, text5_2, text5_3, text5_4, text5_5, text5_6, text5_7, text5_8, text5_9,
+	text6_1, text6_2, text6_3, text6_4, text6_5, text6_6, text6_7, text6_8, text6_9,
+	text7_1, text7_2, text7_3, text7_4, text7_5, text7_6, text7_7, text7_8, text7_9,
+	text8_1, text8_2, text8_3, text8_4, text8_5, text8_6, text8_7, text8_8, text8_9,
+	text9_1, text9_2, text9_3, text9_4, text9_5, text9_6, text9_7, text9_8, text9_9;
+
 	private int seg = 0, min = 0, h = 0, estado = 0, totalSeg = 0;
-	
-	private TableroSudoku ts = new TableroSudoku(tableroCopia);
+
+	private TableroSudoku ts = new TableroSudoku(tablero);
 	private SudoSolucionador ss = new SudoSolucionador(ts);
-	
+
+	private boolean es = false, es1 = false, ayudado = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,10 +70,10 @@ public class SudukoActivity extends Activity{
 		timeString = (TextView) findViewById(R.id.time);
 
 		sudoku = Util.matrizToString(tablero);
-		
+
 		incializarBotonesCamposTexto();
 		eventos();
-		
+
 		temporizador();
 	}
 
@@ -81,58 +85,64 @@ public class SudukoActivity extends Activity{
 	}
 
 	public void eventos(){
-		
+
 		pausaPlay.setOnClickListener(
-			new OnClickListener() {
-				public void onClick(View v) {
-					//Pausa, reanuda el juego
-					if(estado==0){//Estaba activo y va a pausarlo
-						pausaPlay.setText("▶");
-						timer.cancel();
-						timer.purge();
-						estado = 1;
-					}else{//Estaba pausado y lo va activar
-						pausaPlay.setText("||");
-						temporizador();
-						estado = 0;
-					}
-				}
-			}
-		);
-		
-		solucionar.setOnClickListener(
-			new OnClickListener() {
-				public void onClick(View v) {
-					MessageBox("Lo voy a resolver -_-'");
-					ss.adivina(0,0);
-					tableroResuelto = ss.retornaTablero();
-					ponerResuelto();
-					timer.cancel();
-					timer.purge();
-				}
-			}
-		);
-		
-		verificar.setOnClickListener(
 				new OnClickListener() {
 					public void onClick(View v) {
-						boolean es = ts.estaCorrecto();
-						timer.cancel();
-						timer.purge();
-						if(es){
-							intent_terminar(2);
-						}else{//Aqui se crearía un dialogo indicando que esta mala la solución y que si se quiere continuar
-							//o salir del juego
-							MessageBox("Value: "+es);
+						//Pausa, reanuda el juego
+						if(estado==0){//Estaba activo y va a pausarlo
+							pausaPlay.setText("▶");
+							timer.cancel();
+							timer.purge();
+							estado = 1;
+						}else{//Estaba pausado y lo va activar
+							pausaPlay.setText("||");
+							temporizador();
+							estado = 0;
 						}
 					}
 				}
-			);
-		
+				);
+
+		solucionar.setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+						MessageBox("Lo voy a resolver -_-'",Toast.LENGTH_SHORT);
+						ss.adivina(0,0);
+						tableroResuelto = ss.retornaTablero();
+						ponerResuelto();
+						timer.cancel();
+						timer.purge();
+						ayudado = true;
+					}
+				}
+				);
+
+		verificar.setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+						es = ts.estaCorrecto();
+						es1 = ts.estaCompleto(tablero);
+						timer.cancel();
+						timer.purge();
+						if(es&&es1&&!ayudado){
+							intent_terminar(2);
+						}else{//Aqui se crearía un dialogo indicando que esta mala la solución y que si se quiere continuar
+							//o salir del juego
+							if(es&&es1&&ayudado){
+								MessageBox("Nuestro solucionador funcionó correctamente, ahora resuelvelo tú :3",Toast.LENGTH_LONG);
+							}else if(!es||!es1){
+								MessageBox("El sudoku está incompleto, debes de terminarlo antes de presionar este botón otra vez", Toast.LENGTH_LONG);
+							}
+						}
+					}
+				}
+				);
+
 		restart.setOnClickListener(
 				new OnClickListener() {
 					public void onClick(View v) {
-						MessageBox("No pudiste hacerlo T_T (Já já!)");
+						MessageBox("No pudiste hacerlo T_T (Já já!)", Toast.LENGTH_SHORT);
 						incializarBotonesCamposTexto();
 						h=0; min=0; seg=0;
 						timer.cancel();
@@ -140,30 +150,1967 @@ public class SudukoActivity extends Activity{
 						temporizador();
 					}
 				}
-			);		
-		
+				);		
+
 		//Eventos de los textos
-		text1_1.setOnKeyListener(new OnKeyListener() {
+		text1_1.addTextChangedListener(new TextWatcher() {
+
 			@Override
-			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
-				if(arg1 == 1)	MessageBox("Tecla: "+arg1);
-				return true;
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
 			}
 		});
+
+		text1_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text1_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text1_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text1_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text1_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text1_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text1_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text1_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[0][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text2_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text2_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text2_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text2_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text2_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text2_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text2_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text2_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text2_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[1][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text3_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text3_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text3_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[2][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text4_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text4_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text4_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[3][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text5_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text5_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[4][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	
+		text6_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text6_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[5][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text7_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[6][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text8_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[7][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_1.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][0] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_2.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][1] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_3.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][2] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_4.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][3] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_5.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][4] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_6.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][5] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		text9_7.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][6] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	
+		text9_8.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][7] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		text9_9.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				String str = s.toString();
+				int value = Integer.parseInt(str);
+				tablero[8][8] = value;
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
 	}
 
 	private void intent_terminar(int codigo){
 		Intent i = new Intent(getApplicationContext(), FinishActivity.class);
 		i.putExtra("Tiempo", str);
 		i.putExtra("Tiempo_int", totalSeg);
+		i.putExtra("Validacion", es);
 		startActivityForResult(i, codigo);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 		sharedPref.getString("key_sudoku", "");
 	}
@@ -171,8 +2118,9 @@ public class SudukoActivity extends Activity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -181,16 +2129,18 @@ public class SudukoActivity extends Activity{
 		editor.putString("key_sudoku",sudoku);
 		editor.commit();		
 	}
+	
 	@Override
 	protected void onStop() {
 		super.onStop();
 	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 	}
-	
+
 	public void temporizador(){
 		TimerTask tarea = new TimerTask(){
 			@Override
@@ -219,10 +2169,10 @@ public class SudukoActivity extends Activity{
 							str = h+":0"+min+":"+seg;
 						}
 						showTime(str);
-				}});
+					}});
 			}
 		};
-		
+
 		timer = new Timer();
 		timer.schedule(tarea, 1000, 1000);
 	}
@@ -230,19 +2180,19 @@ public class SudukoActivity extends Activity{
 	public void showTime(String time){
 		timeString.setText(time);
 	}
-	
-	public void MessageBox(String message){
-	    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+
+	public void MessageBox(String message, int length){
+		Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
 	}
-		
+
 	public void incializarBotonesCamposTexto(){
 		//Se inicializan los botones y se asigna el valor que le corresponde a cada uno
-		
+
 		solucionar = (Button) findViewById(R.id.Button01);
 		verificar = (Button) findViewById(R.id.Button02);
 		pausaPlay = (Button) findViewById(R.id.Button03);
 		restart = (ImageButton) findViewById(R.id.imageButton01);
-		
+
 		text1_1 = (EditText) findViewById(R.id.editText1);
 		if(tablero[0][0]!=0){
 			text1_1.setText(""+tablero[0][0]);
@@ -258,7 +2208,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_2.setText("");
 		}
-		
+
 		text1_3 = (EditText) findViewById(R.id.editText3);
 		if(tablero[0][2]!=0){
 			text1_3.setText(""+tablero[0][2]);
@@ -266,7 +2216,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_3.setText("");
 		}
-		
+
 		text1_4 = (EditText) findViewById(R.id.editText4);
 		if(tablero[0][3]!=0){
 			text1_4.setText(""+tablero[0][3]);
@@ -274,7 +2224,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_4.setText("");
 		}
-		
+
 		text1_5 = (EditText) findViewById(R.id.editText5);
 		if(tablero[0][4]!=0){
 			text1_5.setText(""+tablero[0][4]);
@@ -282,7 +2232,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_5.setText("");
 		}
-		
+
 		text1_6 = (EditText) findViewById(R.id.editText6);
 		if(tablero[0][5]!=0){
 			text1_6.setText(""+tablero[0][5]);
@@ -290,7 +2240,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_6.setText("");
 		}
-		
+
 		text1_7 = (EditText) findViewById(R.id.editText7);
 		if(tablero[0][6]!=0){
 			text1_7.setText(""+tablero[0][6]);
@@ -298,7 +2248,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_7.setText("");
 		}
-		
+
 		text1_8 = (EditText) findViewById(R.id.editText8);
 		if(tablero[0][7]!=0){
 			text1_8.setText(""+tablero[0][7]);
@@ -306,7 +2256,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_8.setText("");
 		}
-		
+
 		text1_9 = (EditText) findViewById(R.id.editText9);
 		if(tablero[0][8]!=0){
 			text1_9.setText(""+tablero[0][8]);
@@ -314,7 +2264,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_9.setText("");
 		}
-		
+
 		text2_1 = (EditText) findViewById(R.id.editText10);
 		if(tablero[1][0]!=0){
 			text2_1.setText(""+tablero[1][0]);
@@ -322,7 +2272,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_1.setText("");
 		}
-		
+
 		text2_2 = (EditText) findViewById(R.id.editText11);
 		if(tablero[1][1]!=0){
 			text2_2.setText(""+tablero[1][1]);
@@ -330,7 +2280,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_2.setText("");
 		}
-		
+
 		text2_3 = (EditText) findViewById(R.id.editText12);
 		if(tablero[1][2]!=0){
 			text2_3.setText(""+tablero[1][2]);
@@ -338,7 +2288,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_3.setText("");
 		}
-		
+
 		text2_4 = (EditText) findViewById(R.id.editText13);
 		if(tablero[1][3]!=0){
 			text2_4.setText(""+tablero[1][3]);
@@ -346,7 +2296,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_4.setText("");
 		}
-		
+
 		text2_5 = (EditText) findViewById(R.id.editText14);
 		if(tablero[1][4]!=0){
 			text2_5.setText(""+tablero[1][4]);
@@ -354,7 +2304,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_5.setText("");
 		}
-		
+
 		text2_6 = (EditText) findViewById(R.id.editText15);
 		if(tablero[1][5]!=0){
 			text2_6.setText(""+tablero[1][5]);
@@ -362,7 +2312,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_6.setText("");
 		}
-		
+
 		text2_7 = (EditText) findViewById(R.id.editText16);
 		if(tablero[1][6]!=0){
 			text2_7.setText(""+tablero[1][6]);
@@ -370,7 +2320,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_7.setText("");
 		}
-		
+
 		text2_8 = (EditText) findViewById(R.id.editText17);
 		if(tablero[1][7]!=0){
 			text2_8.setText(""+tablero[1][7]);
@@ -378,7 +2328,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_8.setText("");
 		}
-		
+
 		text2_9 = (EditText) findViewById(R.id.editText18);
 		if(tablero[1][8]!=0){
 			text2_9.setText(""+tablero[1][8]);
@@ -386,7 +2336,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_9.setText("");
 		}
-		
+
 		text3_1 = (EditText) findViewById(R.id.editText19);
 		if(tablero[2][0]!=0){
 			text3_1.setText(""+tablero[2][0]);
@@ -394,7 +2344,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_1.setText("");
 		}
-		
+
 		text3_2 = (EditText) findViewById(R.id.editText20);
 		if(tablero[2][1]!=0){
 			text3_2.setText(""+tablero[2][1]);
@@ -402,7 +2352,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_2.setText("");
 		}
-		
+
 		text3_3 = (EditText) findViewById(R.id.editText21);
 		if(tablero[2][2]!=0){
 			text3_3.setText(""+tablero[2][2]);
@@ -410,7 +2360,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_3.setText("");
 		}
-		
+
 		text3_4 = (EditText) findViewById(R.id.editText22);
 		if(tablero[2][3]!=0){
 			text3_4.setText(""+tablero[2][3]);
@@ -418,7 +2368,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_4.setText("");
 		}
-		
+
 		text3_5 = (EditText) findViewById(R.id.editText23);
 		if(tablero[2][4]!=0){
 			text3_5.setText(""+tablero[2][4]);
@@ -426,7 +2376,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_5.setText("");
 		}
-		
+
 		text3_6 = (EditText) findViewById(R.id.editText24);
 		if(tablero[2][5]!=0){
 			text3_6.setText(""+tablero[2][5]);
@@ -434,7 +2384,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_6.setText("");
 		}
-		
+
 		text3_7 = (EditText) findViewById(R.id.editText25);
 		if(tablero[2][6]!=0){
 			text3_7.setText(""+tablero[2][6]);
@@ -442,7 +2392,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_7.setText("");
 		}
-		
+
 		text3_8 = (EditText) findViewById(R.id.editText26);
 		if(tablero[2][7]!=0){
 			text3_8.setText(""+tablero[2][7]);
@@ -450,7 +2400,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_8.setText("");
 		}
-		
+
 		text3_9 = (EditText) findViewById(R.id.editText27);
 		if(tablero[2][8]!=0){
 			text3_9.setText(""+tablero[2][8]);
@@ -458,7 +2408,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_9.setText("");
 		}
-		
+
 		text4_1 = (EditText) findViewById(R.id.editText28);
 		if(tablero[3][0]!=0){
 			text4_1.setText(""+tablero[3][0]);
@@ -466,7 +2416,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_1.setText("");
 		}
-		
+
 		text4_2 = (EditText) findViewById(R.id.editText29);
 		if(tablero[3][1]!=0){
 			text4_2.setText(""+tablero[3][1]);
@@ -474,7 +2424,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_2.setText("");
 		}
-		
+
 		text4_3 = (EditText) findViewById(R.id.editText30);
 		if(tablero[3][2]!=0){
 			text4_3.setText(""+tablero[3][2]);
@@ -482,7 +2432,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_3.setText("");
 		}
-		
+
 		text4_4 = (EditText) findViewById(R.id.editText31);
 		if(tablero[3][3]!=0){
 			text4_4.setText(""+tablero[3][3]);
@@ -490,7 +2440,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_4.setText("");
 		}
-		
+
 		text4_5 = (EditText) findViewById(R.id.editText32);
 		if(tablero[3][4]!=0){
 			text4_5.setText(""+tablero[3][4]);
@@ -498,7 +2448,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_5.setText("");
 		}
-		
+
 		text4_6 = (EditText) findViewById(R.id.editText33);
 		if(tablero[3][5]!=0){
 			text4_6.setText(""+tablero[3][5]);
@@ -506,7 +2456,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_6.setText("");
 		}
-		
+
 		text4_7 = (EditText) findViewById(R.id.editText34);
 		if(tablero[3][6]!=0){
 			text4_7.setText(""+tablero[3][6]);
@@ -514,7 +2464,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_7.setText("");
 		}
-		
+
 		text4_8 = (EditText) findViewById(R.id.editText35);
 		if(tablero[3][7]!=0){
 			text4_8.setText(""+tablero[3][7]);
@@ -522,7 +2472,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_8.setText("");
 		}
-		
+
 		text4_9 = (EditText) findViewById(R.id.editText36);
 		if(tablero[3][8]!=0){
 			text4_9.setText(""+tablero[3][8]);
@@ -530,7 +2480,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_9.setText("");
 		}
-		
+
 		text5_1 = (EditText) findViewById(R.id.editText37);
 		if(tablero[4][0]!=0){
 			text5_1.setText(""+tablero[4][0]);
@@ -538,7 +2488,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_1.setText("");
 		}
-		
+
 		text5_2 = (EditText) findViewById(R.id.editText38);
 		if(tablero[4][1]!=0){
 			text5_2.setText(""+tablero[4][1]);
@@ -546,7 +2496,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_2.setText("");
 		}
-		
+
 		text5_3 = (EditText) findViewById(R.id.editText39);
 		if(tablero[4][2]!=0){
 			text5_3.setText(""+tablero[4][2]);
@@ -554,7 +2504,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_3.setText("");
 		}
-		
+
 		text5_4 = (EditText) findViewById(R.id.editText40);
 		if(tablero[4][3]!=0){
 			text5_4.setText(""+tablero[4][3]);
@@ -562,7 +2512,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_4.setText("");
 		}
-		
+
 		text5_5 = (EditText) findViewById(R.id.editText41);
 		if(tablero[4][4]!=0){
 			text5_5.setText(""+tablero[4][4]);
@@ -570,7 +2520,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_5.setText("");
 		}
-		
+
 		text5_6 = (EditText) findViewById(R.id.editText42);
 		if(tablero[4][5]!=0){
 			text5_6.setText(""+tablero[4][5]);
@@ -578,7 +2528,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_6.setText("");
 		}
-		
+
 		text5_7 = (EditText) findViewById(R.id.editText43);
 		if(tablero[4][6]!=0){
 			text5_7.setText(""+tablero[4][6]);
@@ -586,7 +2536,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_7.setText("");
 		}
-		
+
 		text5_8 = (EditText) findViewById(R.id.editText44);
 		if(tablero[4][7]!=0){
 			text5_8.setText(""+tablero[4][7]);
@@ -594,7 +2544,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_8.setText("");
 		}
-		
+
 		text5_9 = (EditText) findViewById(R.id.editText45);
 		if(tablero[4][8]!=0){
 			text5_9.setText(""+tablero[4][8]);
@@ -602,7 +2552,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_9.setText("");
 		}
-		
+
 		text6_1 = (EditText) findViewById(R.id.editText46);
 		if(tablero[5][0]!=0){
 			text6_1.setText(""+tablero[5][0]);
@@ -610,7 +2560,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_1.setText("");
 		}
-		
+
 		text6_2 = (EditText) findViewById(R.id.editText47);
 		if(tablero[5][1]!=0){
 			text6_2.setText(""+tablero[5][1]);
@@ -618,7 +2568,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_2.setText("");
 		}
-		
+
 		text6_3 = (EditText) findViewById(R.id.editText48);
 		if(tablero[5][2]!=0){
 			text6_3.setText(""+tablero[5][2]);
@@ -626,7 +2576,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_3.setText("");
 		}
-		
+
 		text6_4 = (EditText) findViewById(R.id.editText49);
 		if(tablero[5][3]!=0){
 			text6_4.setText(""+tablero[5][3]);
@@ -634,7 +2584,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_4.setText("");
 		}
-		
+
 		text6_5 = (EditText) findViewById(R.id.editText50);
 		if(tablero[5][4]!=0){
 			text6_5.setText(""+tablero[5][4]);
@@ -642,7 +2592,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_5.setText("");
 		}
-		
+
 		text6_6 = (EditText) findViewById(R.id.editText51);
 		if(tablero[5][5]!=0){
 			text6_6.setText(""+tablero[5][5]);
@@ -650,7 +2600,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_6.setText("");
 		}
-		
+
 		text6_7 = (EditText) findViewById(R.id.editText52);
 		if(tablero[5][6]!=0){
 			text6_7.setText(""+tablero[5][6]);
@@ -658,7 +2608,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_7.setText("");
 		}
-		
+
 		text6_8 = (EditText) findViewById(R.id.editText53);
 		if(tablero[5][7]!=0){
 			text6_8.setText(""+tablero[5][7]);
@@ -666,7 +2616,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_8.setText("");
 		}
-		
+
 		text6_9 = (EditText) findViewById(R.id.editText54);
 		if(tablero[5][8]!=0){
 			text6_9.setText(""+tablero[5][8]);
@@ -674,7 +2624,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_9.setText("");
 		}
-		
+
 		text7_1 = (EditText) findViewById(R.id.editText55);
 		if(tablero[6][0]!=0){
 			text7_1.setText(""+tablero[6][0]);
@@ -682,7 +2632,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_1.setText("");
 		}
-		
+
 		text7_2 = (EditText) findViewById(R.id.editText56);
 		if(tablero[6][1]!=0){
 			text7_2.setText(""+tablero[6][1]);
@@ -690,7 +2640,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_2.setText("");
 		}
-		
+
 		text7_3 = (EditText) findViewById(R.id.editText57);
 		if(tablero[6][2]!=0){
 			text7_3.setText(""+tablero[6][2]);
@@ -698,7 +2648,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_3.setText("");
 		}
-		
+
 		text7_4 = (EditText) findViewById(R.id.editText58);
 		if(tablero[6][3]!=0){
 			text7_4.setText(""+tablero[6][3]);
@@ -706,7 +2656,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_4.setText("");
 		}
-		
+
 		text7_5 = (EditText) findViewById(R.id.editText59);
 		if(tablero[6][4]!=0){
 			text7_5.setText(""+tablero[6][4]);
@@ -714,7 +2664,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_5.setText("");
 		}
-		
+
 		text7_6 = (EditText) findViewById(R.id.editText60);
 		if(tablero[6][5]!=0){
 			text7_6.setText(""+tablero[6][5]);
@@ -722,7 +2672,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_6.setText("");
 		}
-		
+
 		text7_7 = (EditText) findViewById(R.id.editText61);
 		if(tablero[6][6]!=0){
 			text7_7.setText(""+tablero[6][6]);
@@ -730,7 +2680,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_7.setText("");
 		}
-		
+
 		text7_8 = (EditText) findViewById(R.id.editText62);
 		if(tablero[6][7]!=0){
 			text7_8.setText(""+tablero[6][7]);
@@ -738,7 +2688,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_8.setText("");
 		}
-		
+
 		text7_9 = (EditText) findViewById(R.id.editText63);
 		if(tablero[6][8]!=0){
 			text7_9.setText(""+tablero[6][8]);
@@ -746,7 +2696,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_9.setText("");
 		}
-		
+
 		text8_1 = (EditText) findViewById(R.id.editText64);
 		if(tablero[7][0]!=0){
 			text8_1.setText(""+tablero[7][0]);
@@ -754,7 +2704,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_1.setText("");
 		}
-		
+
 		text8_2 = (EditText) findViewById(R.id.editText65);
 		if(tablero[7][1]!=0){
 			text8_2.setText(""+tablero[7][1]);
@@ -762,7 +2712,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_2.setText("");
 		}
-		
+
 		text8_3 = (EditText) findViewById(R.id.editText66);
 		if(tablero[7][2]!=0){
 			text8_3.setText(""+tablero[7][2]);
@@ -770,7 +2720,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_3.setText("");
 		}
-		
+
 		text8_4 = (EditText) findViewById(R.id.editText67);
 		if(tablero[7][3]!=0){
 			text8_4.setText(""+tablero[7][3]);
@@ -778,7 +2728,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_4.setText("");
 		}
-		
+
 		text8_5 = (EditText) findViewById(R.id.editText68);
 		if(tablero[7][4]!=0){
 			text8_5.setText(""+tablero[7][4]);
@@ -786,7 +2736,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_5.setText("");
 		}
-		
+
 		text8_6 = (EditText) findViewById(R.id.editText69);
 		if(tablero[7][5]!=0){
 			text8_6.setText(""+tablero[7][5]);
@@ -794,7 +2744,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_6.setText("");
 		}
-		
+
 		text8_7 = (EditText) findViewById(R.id.editText70);
 		if(tablero[7][6]!=0){
 			text8_7.setText(""+tablero[7][6]);
@@ -802,7 +2752,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_7.setText("");
 		}
-		
+
 		text8_8 = (EditText) findViewById(R.id.editText71);
 		if(tablero[7][7]!=0){
 			text8_8.setText(""+tablero[7][7]);
@@ -810,7 +2760,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_8.setText("");
 		}
-		
+
 		text8_9 = (EditText) findViewById(R.id.editText72);
 		if(tablero[7][8]!=0){
 			text8_9.setText(""+tablero[7][8]);
@@ -818,7 +2768,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_9.setText("");
 		}
-		
+
 		text9_1 = (EditText) findViewById(R.id.editText73);
 		if(tablero[8][0]!=0){
 			text9_1.setText(""+tablero[8][0]);
@@ -826,7 +2776,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_1.setText("");
 		}
-		
+
 		text9_2 = (EditText) findViewById(R.id.editText74);
 		if(tablero[8][1]!=0){
 			text9_2.setText(""+tablero[8][1]);
@@ -834,7 +2784,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_2.setText("");
 		}
-		
+
 		text9_3 = (EditText) findViewById(R.id.editText75);
 		if(tablero[8][2]!=0){
 			text9_3.setText(""+tablero[8][2]);
@@ -842,7 +2792,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_3.setText("");
 		}
-		
+
 		text9_4 = (EditText) findViewById(R.id.editText76);
 		if(tablero[8][3]!=0){
 			text9_4.setText(""+tablero[8][3]);
@@ -850,7 +2800,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_4.setText("");
 		}
-		
+
 		text9_5 = (EditText) findViewById(R.id.editText77);
 		if(tablero[8][4]!=0){
 			text9_5.setText(""+tablero[8][4]);
@@ -858,7 +2808,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_5.setText("");
 		}
-		
+
 		text9_6 = (EditText) findViewById(R.id.editText78);
 		if(tablero[8][5]!=0){
 			text9_6.setText(""+tablero[8][5]);
@@ -866,7 +2816,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_6.setText("");
 		}
-		
+
 		text9_7 = (EditText) findViewById(R.id.editText79);
 		if(tablero[8][6]!=0){
 			text9_7.setText(""+tablero[8][6]);
@@ -874,7 +2824,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_7.setText("");
 		}
-		
+
 		text9_8 = (EditText) findViewById(R.id.editText80);
 		if(tablero[8][7]!=0){
 			text9_8.setText(""+tablero[8][7]);
@@ -882,7 +2832,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_8.setText("");
 		}
-		
+
 		text9_9 = (EditText) findViewById(R.id.editText81);
 		if(tablero[8][8]!=0){
 			text9_9.setText(""+tablero[8][8]);
@@ -892,7 +2842,6 @@ public class SudukoActivity extends Activity{
 		}
 	}
 
-	
 	public void ponerResuelto(){
 		text1_1 = (EditText) findViewById(R.id.editText1);
 		if(tableroResuelto[0][0]!=0){
@@ -909,7 +2858,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_2.setText("");
 		}
-		
+
 		text1_3 = (EditText) findViewById(R.id.editText3);
 		if(tablero[0][2]!=0){
 			text1_3.setText(""+tablero[0][2]);
@@ -917,7 +2866,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_3.setText("");
 		}
-		
+
 		text1_4 = (EditText) findViewById(R.id.editText4);
 		if(tablero[0][3]!=0){
 			text1_4.setText(""+tablero[0][3]);
@@ -925,7 +2874,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_4.setText("");
 		}
-		
+
 		text1_5 = (EditText) findViewById(R.id.editText5);
 		if(tablero[0][4]!=0){
 			text1_5.setText(""+tablero[0][4]);
@@ -933,7 +2882,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_5.setText("");
 		}
-		
+
 		text1_6 = (EditText) findViewById(R.id.editText6);
 		if(tablero[0][5]!=0){
 			text1_6.setText(""+tablero[0][5]);
@@ -941,7 +2890,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_6.setText("");
 		}
-		
+
 		text1_7 = (EditText) findViewById(R.id.editText7);
 		if(tablero[0][6]!=0){
 			text1_7.setText(""+tablero[0][6]);
@@ -949,7 +2898,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_7.setText("");
 		}
-		
+
 		text1_8 = (EditText) findViewById(R.id.editText8);
 		if(tablero[0][7]!=0){
 			text1_8.setText(""+tablero[0][7]);
@@ -957,7 +2906,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_8.setText("");
 		}
-		
+
 		text1_9 = (EditText) findViewById(R.id.editText9);
 		if(tablero[0][8]!=0){
 			text1_9.setText(""+tablero[0][8]);
@@ -965,7 +2914,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text1_9.setText("");
 		}
-		
+
 		text2_1 = (EditText) findViewById(R.id.editText10);
 		if(tablero[1][0]!=0){
 			text2_1.setText(""+tablero[1][0]);
@@ -973,7 +2922,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_1.setText("");
 		}
-		
+
 		text2_2 = (EditText) findViewById(R.id.editText11);
 		if(tablero[1][1]!=0){
 			text2_2.setText(""+tablero[1][1]);
@@ -981,7 +2930,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_2.setText("");
 		}
-		
+
 		text2_3 = (EditText) findViewById(R.id.editText12);
 		if(tablero[1][2]!=0){
 			text2_3.setText(""+tablero[1][2]);
@@ -989,7 +2938,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_3.setText("");
 		}
-		
+
 		text2_4 = (EditText) findViewById(R.id.editText13);
 		if(tablero[1][3]!=0){
 			text2_4.setText(""+tablero[1][3]);
@@ -997,7 +2946,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_4.setText("");
 		}
-		
+
 		text2_5 = (EditText) findViewById(R.id.editText14);
 		if(tablero[1][4]!=0){
 			text2_5.setText(""+tablero[1][4]);
@@ -1005,7 +2954,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_5.setText("");
 		}
-		
+
 		text2_6 = (EditText) findViewById(R.id.editText15);
 		if(tablero[1][5]!=0){
 			text2_6.setText(""+tablero[1][5]);
@@ -1013,7 +2962,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_6.setText("");
 		}
-		
+
 		text2_7 = (EditText) findViewById(R.id.editText16);
 		if(tablero[1][6]!=0){
 			text2_7.setText(""+tablero[1][6]);
@@ -1021,7 +2970,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_7.setText("");
 		}
-		
+
 		text2_8 = (EditText) findViewById(R.id.editText17);
 		if(tablero[1][7]!=0){
 			text2_8.setText(""+tablero[1][7]);
@@ -1029,7 +2978,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_8.setText("");
 		}
-		
+
 		text2_9 = (EditText) findViewById(R.id.editText18);
 		if(tablero[1][8]!=0){
 			text2_9.setText(""+tablero[1][8]);
@@ -1037,7 +2986,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text2_9.setText("");
 		}
-		
+
 		text3_1 = (EditText) findViewById(R.id.editText19);
 		if(tablero[2][0]!=0){
 			text3_1.setText(""+tablero[2][0]);
@@ -1045,7 +2994,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_1.setText("");
 		}
-		
+
 		text3_2 = (EditText) findViewById(R.id.editText20);
 		if(tablero[2][1]!=0){
 			text3_2.setText(""+tablero[2][1]);
@@ -1053,7 +3002,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_2.setText("");
 		}
-		
+
 		text3_3 = (EditText) findViewById(R.id.editText21);
 		if(tablero[2][2]!=0){
 			text3_3.setText(""+tablero[2][2]);
@@ -1061,7 +3010,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_3.setText("");
 		}
-		
+
 		text3_4 = (EditText) findViewById(R.id.editText22);
 		if(tablero[2][3]!=0){
 			text3_4.setText(""+tablero[2][3]);
@@ -1069,7 +3018,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_4.setText("");
 		}
-		
+
 		text3_5 = (EditText) findViewById(R.id.editText23);
 		if(tablero[2][4]!=0){
 			text3_5.setText(""+tablero[2][4]);
@@ -1077,7 +3026,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_5.setText("");
 		}
-		
+
 		text3_6 = (EditText) findViewById(R.id.editText24);
 		if(tablero[2][5]!=0){
 			text3_6.setText(""+tablero[2][5]);
@@ -1085,7 +3034,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_6.setText("");
 		}
-		
+
 		text3_7 = (EditText) findViewById(R.id.editText25);
 		if(tablero[2][6]!=0){
 			text3_7.setText(""+tablero[2][6]);
@@ -1093,7 +3042,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_7.setText("");
 		}
-		
+
 		text3_8 = (EditText) findViewById(R.id.editText26);
 		if(tablero[2][7]!=0){
 			text3_8.setText(""+tablero[2][7]);
@@ -1101,7 +3050,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_8.setText("");
 		}
-		
+
 		text3_9 = (EditText) findViewById(R.id.editText27);
 		if(tablero[2][8]!=0){
 			text3_9.setText(""+tablero[2][8]);
@@ -1109,7 +3058,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text3_9.setText("");
 		}
-		
+
 		text4_1 = (EditText) findViewById(R.id.editText28);
 		if(tablero[3][0]!=0){
 			text4_1.setText(""+tablero[3][0]);
@@ -1117,7 +3066,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_1.setText("");
 		}
-		
+
 		text4_2 = (EditText) findViewById(R.id.editText29);
 		if(tablero[3][1]!=0){
 			text4_2.setText(""+tablero[3][1]);
@@ -1125,7 +3074,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_2.setText("");
 		}
-		
+
 		text4_3 = (EditText) findViewById(R.id.editText30);
 		if(tablero[3][2]!=0){
 			text4_3.setText(""+tablero[3][2]);
@@ -1133,7 +3082,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_3.setText("");
 		}
-		
+
 		text4_4 = (EditText) findViewById(R.id.editText31);
 		if(tablero[3][3]!=0){
 			text4_4.setText(""+tablero[3][3]);
@@ -1141,7 +3090,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_4.setText("");
 		}
-		
+
 		text4_5 = (EditText) findViewById(R.id.editText32);
 		if(tablero[3][4]!=0){
 			text4_5.setText(""+tablero[3][4]);
@@ -1149,7 +3098,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_5.setText("");
 		}
-		
+
 		text4_6 = (EditText) findViewById(R.id.editText33);
 		if(tablero[3][5]!=0){
 			text4_6.setText(""+tablero[3][5]);
@@ -1157,7 +3106,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_6.setText("");
 		}
-		
+
 		text4_7 = (EditText) findViewById(R.id.editText34);
 		if(tablero[3][6]!=0){
 			text4_7.setText(""+tablero[3][6]);
@@ -1165,7 +3114,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_7.setText("");
 		}
-		
+
 		text4_8 = (EditText) findViewById(R.id.editText35);
 		if(tablero[3][7]!=0){
 			text4_8.setText(""+tablero[3][7]);
@@ -1173,7 +3122,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_8.setText("");
 		}
-		
+
 		text4_9 = (EditText) findViewById(R.id.editText36);
 		if(tablero[3][8]!=0){
 			text4_9.setText(""+tablero[3][8]);
@@ -1181,7 +3130,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text4_9.setText("");
 		}
-		
+
 		text5_1 = (EditText) findViewById(R.id.editText37);
 		if(tablero[4][0]!=0){
 			text5_1.setText(""+tablero[4][0]);
@@ -1189,7 +3138,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_1.setText("");
 		}
-		
+
 		text5_2 = (EditText) findViewById(R.id.editText38);
 		if(tablero[4][1]!=0){
 			text5_2.setText(""+tablero[4][1]);
@@ -1197,7 +3146,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_2.setText("");
 		}
-		
+
 		text5_3 = (EditText) findViewById(R.id.editText39);
 		if(tablero[4][2]!=0){
 			text5_3.setText(""+tablero[4][2]);
@@ -1205,7 +3154,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_3.setText("");
 		}
-		
+
 		text5_4 = (EditText) findViewById(R.id.editText40);
 		if(tablero[4][3]!=0){
 			text5_4.setText(""+tablero[4][3]);
@@ -1213,7 +3162,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_4.setText("");
 		}
-		
+
 		text5_5 = (EditText) findViewById(R.id.editText41);
 		if(tablero[4][4]!=0){
 			text5_5.setText(""+tablero[4][4]);
@@ -1221,7 +3170,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_5.setText("");
 		}
-		
+
 		text5_6 = (EditText) findViewById(R.id.editText42);
 		if(tablero[4][5]!=0){
 			text5_6.setText(""+tablero[4][5]);
@@ -1229,7 +3178,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_6.setText("");
 		}
-		
+
 		text5_7 = (EditText) findViewById(R.id.editText43);
 		if(tablero[4][6]!=0){
 			text5_7.setText(""+tablero[4][6]);
@@ -1237,7 +3186,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_7.setText("");
 		}
-		
+
 		text5_8 = (EditText) findViewById(R.id.editText44);
 		if(tablero[4][7]!=0){
 			text5_8.setText(""+tablero[4][7]);
@@ -1245,7 +3194,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_8.setText("");
 		}
-		
+
 		text5_9 = (EditText) findViewById(R.id.editText45);
 		if(tablero[4][8]!=0){
 			text5_9.setText(""+tablero[4][8]);
@@ -1253,7 +3202,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text5_9.setText("");
 		}
-		
+
 		text6_1 = (EditText) findViewById(R.id.editText46);
 		if(tablero[5][0]!=0){
 			text6_1.setText(""+tablero[5][0]);
@@ -1261,7 +3210,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_1.setText("");
 		}
-		
+
 		text6_2 = (EditText) findViewById(R.id.editText47);
 		if(tablero[5][1]!=0){
 			text6_2.setText(""+tablero[5][1]);
@@ -1269,7 +3218,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_2.setText("");
 		}
-		
+
 		text6_3 = (EditText) findViewById(R.id.editText48);
 		if(tablero[5][2]!=0){
 			text6_3.setText(""+tablero[5][2]);
@@ -1277,7 +3226,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_3.setText("");
 		}
-		
+
 		text6_4 = (EditText) findViewById(R.id.editText49);
 		if(tablero[5][3]!=0){
 			text6_4.setText(""+tablero[5][3]);
@@ -1285,7 +3234,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_4.setText("");
 		}
-		
+
 		text6_5 = (EditText) findViewById(R.id.editText50);
 		if(tablero[5][4]!=0){
 			text6_5.setText(""+tablero[5][4]);
@@ -1293,7 +3242,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_5.setText("");
 		}
-		
+
 		text6_6 = (EditText) findViewById(R.id.editText51);
 		if(tablero[5][5]!=0){
 			text6_6.setText(""+tablero[5][5]);
@@ -1301,7 +3250,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_6.setText("");
 		}
-		
+
 		text6_7 = (EditText) findViewById(R.id.editText52);
 		if(tablero[5][6]!=0){
 			text6_7.setText(""+tablero[5][6]);
@@ -1309,7 +3258,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_7.setText("");
 		}
-		
+
 		text6_8 = (EditText) findViewById(R.id.editText53);
 		if(tablero[5][7]!=0){
 			text6_8.setText(""+tablero[5][7]);
@@ -1317,7 +3266,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_8.setText("");
 		}
-		
+
 		text6_9 = (EditText) findViewById(R.id.editText54);
 		if(tablero[5][8]!=0){
 			text6_9.setText(""+tablero[5][8]);
@@ -1325,7 +3274,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text6_9.setText("");
 		}
-		
+
 		text7_1 = (EditText) findViewById(R.id.editText55);
 		if(tablero[6][0]!=0){
 			text7_1.setText(""+tablero[6][0]);
@@ -1333,7 +3282,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_1.setText("");
 		}
-		
+
 		text7_2 = (EditText) findViewById(R.id.editText56);
 		if(tablero[6][1]!=0){
 			text7_2.setText(""+tablero[6][1]);
@@ -1341,7 +3290,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_2.setText("");
 		}
-		
+
 		text7_3 = (EditText) findViewById(R.id.editText57);
 		if(tablero[6][2]!=0){
 			text7_3.setText(""+tablero[6][2]);
@@ -1349,7 +3298,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_3.setText("");
 		}
-		
+
 		text7_4 = (EditText) findViewById(R.id.editText58);
 		if(tablero[6][3]!=0){
 			text7_4.setText(""+tablero[6][3]);
@@ -1357,7 +3306,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_4.setText("");
 		}
-		
+
 		text7_5 = (EditText) findViewById(R.id.editText59);
 		if(tablero[6][4]!=0){
 			text7_5.setText(""+tablero[6][4]);
@@ -1365,7 +3314,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_5.setText("");
 		}
-		
+
 		text7_6 = (EditText) findViewById(R.id.editText60);
 		if(tablero[6][5]!=0){
 			text7_6.setText(""+tablero[6][5]);
@@ -1373,7 +3322,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_6.setText("");
 		}
-		
+
 		text7_7 = (EditText) findViewById(R.id.editText61);
 		if(tablero[6][6]!=0){
 			text7_7.setText(""+tablero[6][6]);
@@ -1381,7 +3330,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_7.setText("");
 		}
-		
+
 		text7_8 = (EditText) findViewById(R.id.editText62);
 		if(tablero[6][7]!=0){
 			text7_8.setText(""+tablero[6][7]);
@@ -1389,7 +3338,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_8.setText("");
 		}
-		
+
 		text7_9 = (EditText) findViewById(R.id.editText63);
 		if(tablero[6][8]!=0){
 			text7_9.setText(""+tablero[6][8]);
@@ -1397,7 +3346,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text7_9.setText("");
 		}
-		
+
 		text8_1 = (EditText) findViewById(R.id.editText64);
 		if(tablero[7][0]!=0){
 			text8_1.setText(""+tablero[7][0]);
@@ -1405,7 +3354,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_1.setText("");
 		}
-		
+
 		text8_2 = (EditText) findViewById(R.id.editText65);
 		if(tablero[7][1]!=0){
 			text8_2.setText(""+tablero[7][1]);
@@ -1413,7 +3362,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_2.setText("");
 		}
-		
+
 		text8_3 = (EditText) findViewById(R.id.editText66);
 		if(tablero[7][2]!=0){
 			text8_3.setText(""+tablero[7][2]);
@@ -1421,7 +3370,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_3.setText("");
 		}
-		
+
 		text8_4 = (EditText) findViewById(R.id.editText67);
 		if(tablero[7][3]!=0){
 			text8_4.setText(""+tablero[7][3]);
@@ -1429,7 +3378,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_4.setText("");
 		}
-		
+
 		text8_5 = (EditText) findViewById(R.id.editText68);
 		if(tablero[7][4]!=0){
 			text8_5.setText(""+tablero[7][4]);
@@ -1437,7 +3386,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_5.setText("");
 		}
-		
+
 		text8_6 = (EditText) findViewById(R.id.editText69);
 		if(tablero[7][5]!=0){
 			text8_6.setText(""+tablero[7][5]);
@@ -1445,7 +3394,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_6.setText("");
 		}
-		
+
 		text8_7 = (EditText) findViewById(R.id.editText70);
 		if(tablero[7][6]!=0){
 			text8_7.setText(""+tablero[7][6]);
@@ -1453,7 +3402,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_7.setText("");
 		}
-		
+
 		text8_8 = (EditText) findViewById(R.id.editText71);
 		if(tablero[7][7]!=0){
 			text8_8.setText(""+tablero[7][7]);
@@ -1461,7 +3410,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_8.setText("");
 		}
-		
+
 		text8_9 = (EditText) findViewById(R.id.editText72);
 		if(tablero[7][8]!=0){
 			text8_9.setText(""+tablero[7][8]);
@@ -1469,7 +3418,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text8_9.setText("");
 		}
-		
+
 		text9_1 = (EditText) findViewById(R.id.editText73);
 		if(tablero[8][0]!=0){
 			text9_1.setText(""+tablero[8][0]);
@@ -1477,7 +3426,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_1.setText("");
 		}
-		
+
 		text9_2 = (EditText) findViewById(R.id.editText74);
 		if(tablero[8][1]!=0){
 			text9_2.setText(""+tablero[8][1]);
@@ -1485,7 +3434,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_2.setText("");
 		}
-		
+
 		text9_3 = (EditText) findViewById(R.id.editText75);
 		if(tablero[8][2]!=0){
 			text9_3.setText(""+tablero[8][2]);
@@ -1493,7 +3442,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_3.setText("");
 		}
-		
+
 		text9_4 = (EditText) findViewById(R.id.editText76);
 		if(tablero[8][3]!=0){
 			text9_4.setText(""+tablero[8][3]);
@@ -1501,7 +3450,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_4.setText("");
 		}
-		
+
 		text9_5 = (EditText) findViewById(R.id.editText77);
 		if(tablero[8][4]!=0){
 			text9_5.setText(""+tablero[8][4]);
@@ -1509,7 +3458,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_5.setText("");
 		}
-		
+
 		text9_6 = (EditText) findViewById(R.id.editText78);
 		if(tablero[8][5]!=0){
 			text9_6.setText(""+tablero[8][5]);
@@ -1517,7 +3466,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_6.setText("");
 		}
-		
+
 		text9_7 = (EditText) findViewById(R.id.editText79);
 		if(tablero[8][6]!=0){
 			text9_7.setText(""+tablero[8][6]);
@@ -1525,7 +3474,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_7.setText("");
 		}
-		
+
 		text9_8 = (EditText) findViewById(R.id.editText80);
 		if(tablero[8][7]!=0){
 			text9_8.setText(""+tablero[8][7]);
@@ -1533,7 +3482,7 @@ public class SudukoActivity extends Activity{
 		}else{
 			text9_8.setText("");
 		}
-		
+
 		text9_9 = (EditText) findViewById(R.id.editText81);
 		if(tablero[8][8]!=0){
 			text9_9.setText(""+tablero[8][8]);
@@ -1542,4 +3491,5 @@ public class SudukoActivity extends Activity{
 			text9_9.setText("");
 		}
 	}
+
 }

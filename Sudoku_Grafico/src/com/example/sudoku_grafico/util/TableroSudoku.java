@@ -25,12 +25,30 @@ public class TableroSudoku {
 	public TableroSudoku(int[][] board) {
 		this(board.length);
 		this.tablero = board;
+		obtenerMatricesInternas();
+		sacarEnArreglo(0);
+		sacarEnArreglo(1);
 	}
+	
+	public boolean estaCompleto(int[][] tablero){
+
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero[i].length; j++) {
+				if(tablero[i][j] == 0){
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}	
 
 	public boolean estaCorrecto(){
 		boolean esCorrecto =  true;
 
-		if(tieneRepetidosCoF(0) || tieneRepetidosCoF(1) || tieneRepetidosEnSub_Matrices()) esCorrecto = false;
+		if(tieneRepetidosCoF(0) || tieneRepetidosCoF(1) || tieneRepetidosEnSub_Matrices()){
+			esCorrecto = false;
+		}
 
 		return esCorrecto;
 	}
