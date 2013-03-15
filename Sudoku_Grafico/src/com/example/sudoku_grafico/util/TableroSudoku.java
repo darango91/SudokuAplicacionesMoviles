@@ -231,4 +231,5 @@ public class TableroSudoku {
 	public int[][] getTablero(){
 		return this.tablero;
 	}
+
 }

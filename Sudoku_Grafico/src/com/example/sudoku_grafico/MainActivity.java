@@ -1,14 +1,17 @@
 package com.example.sudoku_grafico;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
-import java.util.Scanner;
 
-import org.json.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,12 +19,14 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
 	private Button button1;
 	private Button button2;
 	public int codigo = 1;
+	private String sudoku = "", id = "2";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +35,6 @@ public class MainActivity extends Activity {
 		button1 = (Button) findViewById(R.id.Button03);
 		button2 = (Button) findViewById(R.id.button2);
 		evento();
-			
-		webSer("app-appmovil.rhcloud.com");
 		
 	}
 
@@ -45,7 +48,12 @@ public class MainActivity extends Activity {
 	private void evento(){
 		button1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				intent_sudoku(codigo);
+//				if(id.equals("")||id.equals("0")){
+//					id = "1";
+//				}else if(id.equals("1")){
+//					id = "2";
+//				}
+				new LongRunningGetIO().execute();
 			}
 		});
 		
@@ -57,67 +65,54 @@ public class MainActivity extends Activity {
 	}
 	
 	private void intent_sudoku(int codigo){
-		Intent abrirSudoku= new Intent(getApplicationContext(), SudukoActivity.class);
-		startActivityForResult(abrirSudoku, codigo);
+		Intent i= new Intent(getApplicationContext(), SudukoActivity.class);
+		i.putExtra("Sudoku", sudoku);
+		startActivityForResult(i, codigo);
 	}
-	public static JSONObject webSer(String serviceUrl) {
-	    disableConnectionReuseIfNecessary();
-        HttpURLConnection urlConnection = null;
-		    try {
-	        // create connection
-	        URL urlToRequest = new URL(serviceUrl);
-	        urlConnection = (HttpURLConnection)
-	        urlToRequest.openConnection();
-	         
-		    // handle issues
-		    int statusCode = urlConnection.getResponseCode();
-		    if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-		   // handle unauthorized (if service requires user login)
-		    } else if (statusCode != HttpURLConnection.HTTP_OK) {
-		     // handle any other errors, like 404, 500,..
-		       }
-		        // create JSON object from content
-				        InputStream in = new BufferedInputStream(
-			            urlConnection.getInputStream());
-				        return new JSONObject(getResponseText(in));
-		    } catch (MalformedURLException e) {
-		   // URL is invalid
-		   } catch (SocketTimeoutException e) {
-		      // data retrieval or connection timed out
-		   } catch (IOException e) {
-		   // could not read response body
-		
-		        // (could not create input stream)
-		   } catch (JSONException e) {
-		     // response body is no valid JSON string
-		    } finally {
-		     if (urlConnection != null) {
-		          urlConnection.disconnect();
-		   }
-		
-		    }      
-		
-		
-				    return null;
-		
+	
+	public void MessageBox(String message, int length){
+		Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+	}
+	
+	//con esta clase se trae el sudoku desde el servidor en widnows azure
+	private class LongRunningGetIO extends AsyncTask <Void, Void, String> {
+		protected String getASCIIContentFromEntity(HttpEntity entity) throws IllegalStateException, IOException {
+			InputStream in = entity.getContent();
+			StringBuffer out = new StringBuffer();
+			int n = 1;
+			while (n>0) {
+				byte[] b = new byte[4096];
+				n =  in.read(b);
+				if (n>0) out.append(new String(b, 0, n));
+			}
+			return out.toString();
 		}
-					
-		private static void disableConnectionReuseIfNecessary() {
-		
-		   // see HttpURLConnection API doc
-				    if (Integer.parseInt(Build.VERSION.SDK)
-				            < Build.VERSION_CODES.FROYO) {
-		
-		        System.setProperty("http.keepAlive", "false");
-		
-		    }
-		
+		@Override
+		protected String doInBackground(Void... params) {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpContext localContext = new BasicHttpContext();
+			HttpGet httpGet = new HttpGet("http://sudokuapp.azurewebsites.net/api/sudokus/?id="+id);
+			String text = null;
+			try {
+				HttpResponse response = httpClient.execute(httpGet, localContext);
+				HttpEntity entity = response.getEntity();
+				text = getASCIIContentFromEntity(entity);
+			} catch (Exception e) {
+				return e.getLocalizedMessage();
+			}
+			String[] t1 = text.split(":");
+			String[] t2 = t1[2].split("\"");
+			
+			String t = t2[1];
+			text = t;
+			return text;
 		}
-		
-		private static String getResponseText(InputStream inStream) {
-				
-		   return new Scanner(inStream).useDelimiter("\\A").next();
-		
+		protected void onPostExecute(String results) {
+			if (results!=null) {
+				sudoku = results;
+				intent_sudoku(codigo);
+			}
 		}
+	}
 
 }
